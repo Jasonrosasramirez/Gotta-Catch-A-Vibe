@@ -214,7 +214,7 @@ const getDataAndRender = function () {
             }
             console.log(boostedTypes[0])
            displayMainCard(pokeWeather,boostedTypes);
-           displayDaycard(pokeWeather,boostedTypes);
+           displayDaycard(pokeWeather);
            displayHourCard(pokeWeather,boostedTypes);
       
 
@@ -259,7 +259,7 @@ const getDataAndRender = function () {
             weatherIconEl.setAttribute("src","http://openweathermap.org/img/w/"+ PokeWeather.hourly[0].weather[0].icon + ".png");
             tempEl.textContent ="Temp: " + ftemp;
             conditionsEL.textContent = PokeWeather.hourly[0].weather[0].main;
-            theTypesEl.textContent = typesOb[0];
+            theTypesEl.textContent = typesOb[0].join(", ");
             //console.log(pokeWeather[0].main);
             mainCardsDiv.setAttribute("style","border:3px solid black; width:50%;")
     
@@ -269,9 +269,34 @@ const getDataAndRender = function () {
 
 
        }
-       function displayDaycard(pokeW,typesO){
+       function displayDaycard(pokeW){
               //connecting to weatherCards dive
         var dayCardsDiv = document.querySelector(".dayCard");
+        let main = pokeW.hourly[23].weather[0].main;
+        let weatherId = pokeW.hourly[23].weather[0].id;
+        var elementTypes = "";
+       if(main === 'Rain' || main === 'Drizzle' || main === 'Thunderstorm'){
+        elementTypes = "Water, Electric, Bug";
+
+       }else if (main === 'Snow'){
+        elementTypes = "Steel, Ice"
+
+       }else if (pokeW.hourly[23].wind_gust + pokeW.hourly[23].wind_speed > 34.2){
+        elementTypes = "Dragon, Flying, Psychic";
+
+       }else if (weatherId >= 701 && weatherId <= 762){
+        elementTypes = "Dark, Ghost";
+
+       }else if (weatherId === 804){
+        elementTypes = "Fairy,Fighting, Poison";
+       }else if (weatherId >= 801 && weatherId <= 803){
+        elementTypes = "Normal, Rock"
+       }else if (main === 'Clear') {
+        elementTypes = "Grass, Ground, Fire";
+
+       }
+             
+                    
   
     
         //displays for times and dates
@@ -302,16 +327,16 @@ const getDataAndRender = function () {
             var ftemp = Math.floor((pokeW.hourly[47].temp -273.15) * 1.8 +32);
             timeSlotEl.textContent = currentTime;
     
-            weatherIconEl.setAttribute("src","http://openweathermap.org/img/w/"+ pokeW.hourly[47].weather[0].icon + ".png");
+            weatherIconEl.setAttribute("src","http://openweathermap.org/img/w/"+ pokeW.hourly[23].weather[0].icon + ".png");
             tempEl.textContent ="Temp: " + ftemp;
-            conditionsEL.textContent = pokeW.hourly[47].weather[0].main;
-            theTypesEl.textContent = typesO[0].value;
+            conditionsEL.textContent = pokeW.hourly[23].weather[0].main;
+            theTypesEl.textContent = elementTypes;
             //console.log(pokeWeather[0].main);
             dayCardsDiv.setAttribute("style","border:3px solid black; width:50%;")
     
     
           // console.log(currentDate,currentTime, duration);
-          dayCardsDiv.append(dateEl,conditionsEL,weatherIconEl,tempEl);
+          dayCardsDiv.append(dateEl,conditionsEL,weatherIconEl,tempEl,theTypesEl);
 
 
        }
@@ -357,9 +382,9 @@ const getDataAndRender = function () {
             weatherIconEl.setAttribute("src","http://openweathermap.org/img/w/"+ poki.hourly[i].weather[0].icon + ".png");
             tempEl.textContent ="Temp: " + ftemp;
             conditionsEL.textContent = poki.hourly[i].weather[0].main;
-            theTypesEl.textContent = boss[i];
+            theTypesEl.textContent = boss[i].join(", ");
             //console.log(pokeWeather[0].main);
-            hourlyCardsDiv.setAttribute("style","border:3px solid black; width:50%;height:50%; display:flex; justify-content: space-between")
+           
     
           // console.log(currentDate,currentTime, duration);
           hourlyCardsDiv.append(timeSlotEl,conditionsEL,weatherIconEl,tempEl,theTypesEl);
@@ -367,6 +392,7 @@ const getDataAndRender = function () {
            
                
            }
+           hourlyCardsDiv.setAttribute("style","border:3px solid black; width:50%; justify-content: space-between");
 
        
        }
