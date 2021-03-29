@@ -223,7 +223,7 @@ const weatherBoosters = {
 }
 
 
-const getDataAndRender = function () {
+function getDataAndRender(){
     geocode()
         .then(hourlyWeather)
         .then(function (pokeWeather) {
